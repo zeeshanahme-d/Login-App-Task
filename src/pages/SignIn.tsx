@@ -10,7 +10,6 @@ import { LoginRequest, userLogin } from "../services/Auth";
 
 
 const SignIn: React.FC = () => {
-    const [passVisibility, setPassVisibility] = useState(false);
     const [state, setState] = useState({
         usernameOrEmail: "",
         password: "",
@@ -93,7 +92,6 @@ const SignIn: React.FC = () => {
 
         // Email or username validation
         handleEmailValidation(state.usernameOrEmail.trim());
-
 
         // Password validation
         handlePasswordValidation(state.password.trim());
