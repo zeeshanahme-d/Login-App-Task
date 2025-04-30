@@ -112,14 +112,14 @@ const SignIn: React.FC = () => {
 
     return (
         <div className="min-h-screen w-fu;; flex items-center justify-center bg-[#f5f5f5]">
-            <div className="w-[900px] h-[600px] grid md:grid-cols-2 bg-white">
+            <div className="w-[450px] md:w-[900px] h-[600px] flex items-center justify-center md:grid md:grid-cols-2 md:items-stretch md:justify-normal bg-white">
 
                 {/* Left Panel - Form */}
-                <div className="py-6 px-6 md:px-10">
+                <div className="py-6 px-6 md:px-10 flex flex-col justify-center">
                     <img src={logo} alt="logo" className="mb-6 w-[150px]" />
-                    <div className="mt-[20px]">
-                        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-2">Welcome back</h1>
-                        <p className="text-gray-600">You need to be signed in to access the project dashboard.</p>
+                    <div>
+                        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">Welcome back</h1>
+                        <p className="text-gray-600 text-sm md:text-base">You need to be signed in to access the project dashboard.</p>
 
                         <form className="space-y-3 mt-6">
                             {/* Email */}
