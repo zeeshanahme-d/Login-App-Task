@@ -10,7 +10,6 @@ function fetchExecute(request: fetchExecuteRequest) {
         method: request.method,
         headers: request.headers,
         ...(request.body ? { body: JSON.stringify(request.body) } : {}),
-        credentials: 'include'
     })
         .then(res => res.json())
         .then(data => {
