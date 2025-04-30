@@ -5,6 +5,7 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import logo from '../assets/main-logo.png';
 import RightSideImg from '../assets/Right-Column-bg.png';
+//services
 import { LoginRequest, userLogin } from "../services/Auth";
 
 
@@ -46,6 +47,8 @@ const SignIn: React.FC = () => {
             ...prevState,
             usernameOrEmailError: error,
         }));
+
+        return !error;
     };
 
 
@@ -63,6 +66,7 @@ const SignIn: React.FC = () => {
             }));
             return;
         }
+        return true;
     };
 
     const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,16 +100,35 @@ const SignIn: React.FC = () => {
         // Password validation
         handlePasswordValidation(state.password.trim());
 
-        // Validated payload
+        if (state.usernameOrEmailError || state.passwordError) {
+            return;
+        }
+
+        setState((prevState) => ({
+            ...prevState,
+            isLoading: true,
+        }));
+
         const payload: LoginRequest = {
             method: "POST",
             usernameOrEmail: state.usernameOrEmail.trim(),
             password: state.password.trim(),
         };
 
-        console.log("Validated Payload:", payload);
-
-        userLogin(payload);
+        userLogin(payload)
+            .then((response) => {
+                console.log("Login response:", response);
+            })
+            .catch((error) => {
+                console.error("Login error:", error);
+            })
+            .finally(() => {
+                // Reset loading state
+                setState((prevState) => ({
+                    ...prevState,
+                    isLoading: false,
+                }));
+            });
     };
 
     return (
