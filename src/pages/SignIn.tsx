@@ -1,31 +1,40 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 //icons
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import logo from '../assets/main-logo.png';
 import RightSideImg from '../assets/Right-Column-bg.png';
 //services
 import { LoginRequest, userLogin } from "../services/Auth";
-
+//context
+import { useAuth } from "../context/AuthContext";
+import Error from "../components/Error";
+import CustomInput from "../components/CustomInput";
+import Loader from "../components/Loader";
 
 
 const SignIn: React.FC = () => {
+    const { user, setUser } = useAuth();
     const [state, setState] = useState({
         usernameOrEmail: "",
         password: "",
         usernameOrEmailError: "",
         passwordError: "",
+        mainError: "",
         isLoading: false,
         passVisibility: false,
-    })
+        disabledBtn: true,
+    });
+    const navigate = useNavigate();
 
-    const togglePasswordVisibility = () => {
-        setState((prevState) => ({
-            ...prevState,
-            passVisibility: !prevState.passVisibility,
-        }));
-    };
+
+    useEffect(() => {
+        let LocalUser = localStorage.getItem("user");
+        setUser(JSON.parse(LocalUser!));
+        if (LocalUser) {
+            navigate("/dashboard");
+        }
+    }, [user]);
 
     const handleEmailValidation = (usernameOrEmail: string) => {
         const isEmail = usernameOrEmail.includes("@");
@@ -46,11 +55,11 @@ const SignIn: React.FC = () => {
         setState((prevState) => ({
             ...prevState,
             usernameOrEmailError: error,
+            disabledBtn: !error,
         }));
 
         return !error;
     };
-
 
     const handlePasswordValidation = (password: string) => {
         const passwordErrors: string[] = [];
@@ -63,51 +72,19 @@ const SignIn: React.FC = () => {
             setState((prevState) => ({
                 ...prevState,
                 passwordError: `Password must contain: ${passwordErrors.join(", ")}.`,
+                disabledBtn: true,
             }));
             return;
+        } else {
+            return true;
         }
-        return true;
     };
-
-    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-
-        setState((prevState) => {
-            const updatedState = {
-                ...prevState,
-                [name]: value,
-            };
-
-            if (name === "usernameOrEmail") {
-                updatedState.usernameOrEmailError = "";
-            }
-
-            if (name === "password") {
-                updatedState.passwordError = "";
-            }
-
-            return updatedState;
-        });
-    };
-
 
     const handleUserLogin = (e: any) => {
         e.preventDefault();
 
-        // Email or username validation
-        handleEmailValidation(state.usernameOrEmail.trim());
-
-        // Password validation
-        handlePasswordValidation(state.password.trim());
-
-        if (state.usernameOrEmailError || state.passwordError) {
-            return;
-        }
-
-        setState((prevState) => ({
-            ...prevState,
-            isLoading: true,
-        }));
+        let emailError = handleEmailValidation(state.usernameOrEmail.trim())
+        let passError = handlePasswordValidation(state.password.trim())
 
         const payload: LoginRequest = {
             method: "POST",
@@ -115,78 +92,92 @@ const SignIn: React.FC = () => {
             password: state.password.trim(),
         };
 
-        userLogin(payload)
+        if (!emailError || !passError) {
+            return;
+        } else {
+            setState((prevState) => ({
+                ...prevState,
+                isLoading: true,
+            }));
+            handleLoginResponse(payload);
+        }
+
+    };
+
+    const handleLoginResponse = (response: LoginRequest) => {
+        userLogin(response)
             .then((response) => {
-                console.log("Login response:", response);
+                if (response.message) {
+                    setState((prevState) => ({
+                        ...prevState,
+                        mainError: response.message,
+                        disabledBtn: true,
+                    }));
+                    setTimeout(() => {
+                        setState((prevState) => ({
+                            ...prevState,
+                            mainError: "",
+                        }));
+                    }, 5000);
+
+                } else {
+                    setUser(response);
+                    localStorage.setItem("user", JSON.stringify(response));
+                    localStorage.setItem("accessToken", response.accessToken);
+                    navigate("/dashboard");
+                }
             })
             .catch((error) => {
                 console.error("Login error:", error);
             })
             .finally(() => {
-                // Reset loading state
                 setState((prevState) => ({
                     ...prevState,
                     isLoading: false,
                 }));
             });
-    };
+    }
 
     return (
-        <div className="min-h-screen w-fu;; flex items-center justify-center bg-[#f5f5f5]">
-            <div className="w-[450px] md:w-[900px] h-[600px] flex items-center justify-center md:grid md:grid-cols-2 md:items-stretch md:justify-normal bg-white">
-
+        <div className="min-h-screen w-full flex items-center justify-center bg-[#f5f5f5]">
+            <div className="relative w-[450px] md:w-[900px] md:h-[600px] h-[550px] flex items-center justify-center md:grid md:grid-cols-2 md:items-stretch md:justify-normal bg-white">
+                <Loader isLoading={state.isLoading} />
                 {/* Left Panel - Form */}
                 <div className="py-6 px-6 md:px-10 flex flex-col justify-center">
                     <img src={logo} alt="logo" className="mb-6 w-[150px]" />
                     <div>
                         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">Welcome back</h1>
                         <p className="text-gray-600 text-sm md:text-base">You need to be signed in to access the project dashboard.</p>
+                        <Error error={state.mainError} />
 
                         <form className="space-y-3 mt-6">
-                            {/* Email */}
-                            <div className="mt-4">
-                                <>
-                                    <label htmlFor="usernameOrEmail" className="block text-sm font-medium text-gray-700">
-                                        Email or username
-                                    </label>
-                                    <input
-                                        id="usernameOrEmail"
-                                        type="text"
-                                        name="usernameOrEmail"
-                                        placeholder="wesley.mendoza@example.com"
-                                        className=" block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
-                                        onChange={handleOnChange}
-                                        value={state.usernameOrEmail}
-                                    />
-                                </>
-                                {state.usernameOrEmailError && <p className="text-sm text-[#ed4337]">{state.usernameOrEmailError}</p>}
-                            </div>
+                            {/* Email or Username */}
+                            <CustomInput
+                                name="usernameOrEmail"
+                                id="usernameOrEmail"
+                                label="Email or username"
+                                type="text"
+                                placeholder="wesley.mendoza@example.com"
+                                value={state.usernameOrEmail}
+                                error={state.usernameOrEmailError}
+                                disabled={false}
+                                state={state}
+                                setState={setState}
+                            />
 
                             {/* Password */}
-                            <div>
-                                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                                    Password
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        id="password"
-                                        name="password"
-                                        type={state.passVisibility ? "text" : "password"}
-                                        placeholder="••••••••"
-                                        className=" block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
-                                        onChange={handleOnChange}
-                                        value={state.password}
-                                    />
-                                    {/* Password visibility toggle icon*/}
-                                    <div className="absolute inset-y-0 right-3 flex items-center text-gray-400 cursor-pointer">
-                                        {!state.passVisibility ? <FaRegEyeSlash className="h-5 w-5 text-black" onClick={togglePasswordVisibility} />
-                                            :
-                                            <FaRegEye className="h-5 w-5 text-black" onClick={togglePasswordVisibility} />
-                                        }
-                                    </div>
-                                </div>
-                                {state.passwordError && <p className="text-sm text-[#ed4337]">{state.passwordError}</p>}
-                            </div>
+                            <CustomInput
+                                name="password"
+                                id="password"
+                                label="Password"
+                                type="password"
+                                placeholder="••••••••"
+                                value={state.password}
+                                error={state.passwordError}
+                                disabled={false}
+                                state={state}
+                                setState={setState}
+                            />
 
                             {/* Options */}
                             <div className="flex items-center justify-between text-sm">
@@ -202,9 +193,9 @@ const SignIn: React.FC = () => {
                             {/* Sign In Button */}
                             <button
                                 type="button"
-                                className="w-full bg-green-500 text-white hover:bg-green-600 py-2 rounded-md transition"
+                                className={`w-full bg-green-500 text-white hover:bg-green-600 py-2 rounded-md transition ${state.disabledBtn ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={handleUserLogin}
-                                disabled={state.isLoading}
+                                disabled={state.disabledBtn}
                             >
                                 Sign in
                             </button>
