@@ -8,6 +8,7 @@ import RightSideImg from '../assets/Right-Column-bg.png';
 import { LoginRequest, userLogin } from "../services/Auth";
 //context
 import { useAuth } from "../context/AuthContext";
+//components
 import Error from "../components/Error";
 import CustomInput from "../components/CustomInput";
 import Loader from "../components/Loader";
