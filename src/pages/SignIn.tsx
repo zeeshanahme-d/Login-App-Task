@@ -214,7 +214,7 @@ const SignIn: React.FC = () => {
                         {/* Footer */}
                         <p className="mt-4 text-sm text-center text-gray-600">
                             Haven’t joined yet?{" "}
-                            <Link to="/signup" className="text-black font-medium underline hover:no-underline">
+                            <Link to="/" className="text-black font-medium underline hover:no-underline">
                                 Sign in
                             </Link>
                         </p>
