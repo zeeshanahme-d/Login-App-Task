@@ -15,11 +15,10 @@ interface UserContextType {
   firstName: string;
   lastName: string;
   image: string;
-  phone: string;
   gender: string;
-  birthDate: string;
-  address: string;
   accessToken: string;
+  id: number;
+  refreshToken: string;
 };
 
 interface AuthContextProps {

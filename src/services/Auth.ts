@@ -12,15 +12,8 @@ function fetchExecute(request: fetchExecuteRequest) {
         ...(request.body ? { body: JSON.stringify(request.body) } : {}),
     })
         .then(res => res.json())
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            return data;
-        })
-        .catch(err => {
-            console.error('Error:', err);
-        })
+        .then(data => { return data })
+        .catch(err => { return err })
 };
 
 export interface LoginRequest {
