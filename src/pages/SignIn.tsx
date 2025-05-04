@@ -24,7 +24,6 @@ const SignIn: React.FC = () => {
         mainError: "",
         isLoading: false,
         passVisibility: false,
-        disabledBtn: true,
     });
     const navigate = useNavigate();
 
@@ -56,7 +55,6 @@ const SignIn: React.FC = () => {
         setState((prevState) => ({
             ...prevState,
             usernameOrEmailError: error,
-            disabledBtn: !error,
         }));
 
         return !error;
@@ -73,7 +71,6 @@ const SignIn: React.FC = () => {
             setState((prevState) => ({
                 ...prevState,
                 passwordError: `Password must contain: ${passwordErrors.join(", ")}.`,
-                disabledBtn: true,
             }));
             return;
         } else {
@@ -112,7 +109,6 @@ const SignIn: React.FC = () => {
                     setState((prevState) => ({
                         ...prevState,
                         mainError: response.message,
-                        disabledBtn: true,
                     }));
                     setTimeout(() => {
                         setState((prevState) => ({
@@ -196,7 +192,7 @@ const SignIn: React.FC = () => {
                                 type="button"
                                 className={`w-full bg-green-500 text-white hover:bg-green-600 py-2 rounded-md transition ${state.disabledBtn ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={handleUserLogin}
-                                disabled={state.disabledBtn}
+                                disabled={state.isLoading}
                             >
                                 Sign in
                             </button>
