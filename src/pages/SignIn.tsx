@@ -182,7 +182,7 @@ const SignIn: React.FC = () => {
                                     <input type="checkbox" className="rounded border-gray-300" />
                                     Keep me signed in
                                 </label>
-                                <Link to="#" className="text-black font-medium underline hover:no-underline">
+                                <Link to="/" className="text-black font-medium underline hover:no-underline">
                                     Forgot password?
                                 </Link>
                             </div>
@@ -190,7 +190,7 @@ const SignIn: React.FC = () => {
                             {/* Sign In Button */}
                             <button
                                 type="button"
-                                className={`w-full bg-green-500 text-white hover:bg-green-600 py-2 rounded-md transition ${state.disabledBtn ? "opacity-50 cursor-not-allowed" : ""}`}
+                                className={`w-full bg-green-500 text-white hover:bg-green-600 py-2 rounded-md transition ${state.isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={handleUserLogin}
                                 disabled={state.isLoading}
                             >
