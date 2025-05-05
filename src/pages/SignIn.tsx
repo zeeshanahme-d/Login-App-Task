@@ -25,7 +25,6 @@ const SignIn: React.FC = () => {
         mainError: "",
         isLoading: false,
         passVisibility: false,
-        disabledBtn: true,
     });
 
     const handleEmailValidation = (usernameOrEmail: string) => {
@@ -47,7 +46,6 @@ const SignIn: React.FC = () => {
         setState((prevState) => ({
             ...prevState,
             usernameOrEmailError: error,
-            disabledBtn: !error,
         }));
 
         return !error;
@@ -64,7 +62,6 @@ const SignIn: React.FC = () => {
             setState((prevState) => ({
                 ...prevState,
                 passwordError: `Password must contain: ${passwordErrors.join(", ")}.`,
-                disabledBtn: true,
             }));
             return;
         } else {
@@ -103,7 +100,6 @@ const SignIn: React.FC = () => {
                     setState((prevState) => ({
                         ...prevState,
                         mainError: response.message,
-                        disabledBtn: true,
                     }));
                     setTimeout(() => {
                         setState((prevState) => ({
@@ -177,7 +173,7 @@ const SignIn: React.FC = () => {
                                     <input type="checkbox" className="rounded border-gray-300" />
                                     Keep me signed in
                                 </label>
-                                <Link to="#" className="text-black font-medium underline hover:no-underline">
+                                <Link to="/" className="text-black font-medium underline hover:no-underline">
                                     Forgot password?
                                 </Link>
                             </div>
@@ -185,9 +181,9 @@ const SignIn: React.FC = () => {
                             {/* Sign In Button */}
                             <button
                                 type="button"
-                                className={`w-full bg-green-500 text-white hover:bg-green-600 py-2 rounded-md transition ${state.disabledBtn ? "opacity-50 cursor-not-allowed" : ""}`}
+                                className={`w-full bg-green-500 text-white hover:bg-green-600 py-2 rounded-md transition ${state.isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={handleUserLogin}
-                                disabled={state.disabledBtn}
+                                disabled={state.isLoading}
                             >
                                 Sign in
                             </button>
@@ -205,7 +201,7 @@ const SignIn: React.FC = () => {
                         {/* Footer */}
                         <p className="mt-4 text-sm text-center text-gray-600">
                             Haven’t joined yet?{" "}
-                            <Link to="/signup" className="text-black font-medium underline hover:no-underline">
+                            <Link to="/" className="text-black font-medium underline hover:no-underline">
                                 Sign in
                             </Link>
                         </p>

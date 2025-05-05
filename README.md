@@ -1,54 +1,34 @@
-# React + TypeScript + Vite
+# Login App Interview Task
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a responsive login page built using *React 18, **TypeScript, **Vite, and **Tailwind CSS*, as part of the frontend developer task for IR Solutions.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Fully responsive design (mobile, tablet, desktop)
+- API-based login using https://dummyjson.com/auth/login
+- Auth state managed using React Context API
+- Persistent login with localStorage
+- Protected route and sign-out functionality
+- Clean, maintainable code with TypeScript
+- ESLint and Prettier configured (optional)
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React 18
+- Vite + TypeScript
+- Tailwind CSS
+- React Router v6
+- Context API
+- Dummy JSON Auth API
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Live Preview
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+[https://login-app-task.vercel.app/](https://login-app-task.vercel.app/)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Installation
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+```bash
+git clone https://github.com/zeeshanahme-d/Login-App-Task.git
+cd Login-App-Task
+npm install
+npm run dev
