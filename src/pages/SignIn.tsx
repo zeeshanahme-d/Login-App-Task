@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 //icons
 import { FcGoogle } from "react-icons/fc";
@@ -15,7 +15,8 @@ import Loader from "../components/Loader";
 
 
 const SignIn: React.FC = () => {
-    const { user, setUser } = useAuth();
+    const { setUser } = useAuth();
+    const navigate = useNavigate();
     const [state, setState] = useState({
         usernameOrEmail: "",
         password: "",
@@ -26,16 +27,6 @@ const SignIn: React.FC = () => {
         passVisibility: false,
         disabledBtn: true,
     });
-    const navigate = useNavigate();
-
-
-    useEffect(() => {
-        let LocalUser = localStorage.getItem("user");
-        setUser(JSON.parse(LocalUser!));
-        if (LocalUser) {
-            navigate("/dashboard");
-        }
-    }, [user]);
 
     const handleEmailValidation = (usernameOrEmail: string) => {
         const isEmail = usernameOrEmail.includes("@");
