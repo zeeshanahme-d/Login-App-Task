@@ -1,22 +1,15 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-//components
-import SignIn from './pages/SignIn'
-import Dashboard from './pages/Dashboard'
-import ProtectedRoute from './components/ProtectedRoute';
+import { BrowserRouter } from 'react-router-dom'
 //context
 import { AuthProvider } from './context/AuthContext';
+import AppRoutes from './routes/AppRoutes';
 
 
 const App = () => {
-  const ProtectedDashboard = ProtectedRoute(Dashboard);
 
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<SignIn />} />
-          <Route path="/dashboard" element={<ProtectedDashboard />} />
-        </Routes>
+        <AppRoutes />
       </BrowserRouter>
     </AuthProvider>
 
